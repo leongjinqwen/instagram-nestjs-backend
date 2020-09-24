@@ -2,10 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from 'nestjs-config';
 import * as AWS from 'aws-sdk';
 import { v4 as uuid } from 'uuid';
+import { InjectModel } from '@nestjs/mongoose'
+import { CreateImageDto } from './dto/create-image.dto'
+import { Image } from './interfaces/image.interface'
+import { Model } from 'mongoose'
 
 @Injectable()
 export class ImagesService {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    @InjectModel('Image') 
+    private readonly imageModel:Model<Image>,
+    private readonly configService: ConfigService
+  ) {}
 
   async fileupload(file: any) {
     const s3 = new AWS.S3();
@@ -30,5 +38,16 @@ export class ImagesService {
     // }
     return uploadResult.Location
   }
-
+  async uploadImage(userId: string, file: any) {
+    const imageLink = await this.fileupload(file);
+    let createImageDto = new CreateImageDto()
+    createImageDto.userId = userId
+    createImageDto.imageUrl = imageLink
+    const newImage = new this.imageModel(createImageDto);
+    return await newImage.save();
+  }
+  // return all image with user id
+  async findAll(userId: string): Promise<Image[]> {
+    return await this.imageModel.find({userId: userId})
+  }
 }

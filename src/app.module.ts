@@ -24,6 +24,6 @@ import * as path from 'path';
     AuthModule, UsersModule, ItemModule, ImagesModule
   ],
   controllers: [AppController],
-  providers: [AppService, ImagesService],
+  providers: [AppService],
 })
 export class AppModule {}
