@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from 'nestjs-config';
 import * as AWS from 'aws-sdk';
 import { v4 as uuid } from 'uuid';
@@ -14,7 +14,7 @@ export class ImagesService {
     private readonly imageModel:Model<Image>,
     private readonly configService: ConfigService
   ) {}
-
+  // helper function to upload file
   async fileupload(file: any) {
     const s3 = new AWS.S3();
     AWS.config.update({
@@ -38,7 +38,7 @@ export class ImagesService {
     // }
     return uploadResult.Location
   }
-  async uploadImage(userId: string, file: any) {
+  async create(userId: string, file: any) {
     const imageLink = await this.fileupload(file);
     let createImageDto = new CreateImageDto()
     createImageDto.userId = userId
@@ -49,5 +49,16 @@ export class ImagesService {
   // return all image with user id
   async findAll(userId: string): Promise<Image[]> {
     return await this.imageModel.find({userId: userId})
+  }
+  // delete file with image id
+  async delete(userId: string, id: string) : Promise<Image> {
+    const image = await this.imageModel.findOne({ _id: id });
+    if (!image){
+      throw new HttpException('Image not found', HttpStatus.BAD_REQUEST);
+    }
+    if (image.userId !== userId) {
+      throw new HttpException('You not authorized to delete this file.', HttpStatus.UNAUTHORIZED);
+    }
+    return await this.imageModel.findByIdAndRemove(id);
   }
 }

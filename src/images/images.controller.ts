@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, Request, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Param, Request, UseGuards, UseInterceptors, UploadedFile, Delete } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors/file.interceptor';
 import { CreateImageDto } from './dto/create-image.dto'
@@ -17,7 +17,13 @@ export class ImagesController {
     @Post('upload') // upload one file
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(FileInterceptor('file'))
-    async uploadImage(@UploadedFile() file, @Request() req) {
-        return this.imagesService.uploadImage(req.user.id, file);
+    async create(@UploadedFile() file, @Request() req) {
+        return this.imagesService.create(req.user.id, file);
+    }
+
+    @Delete(':id') // delete file with image id
+    @UseGuards(JwtAuthGuard)
+    async delete(@Param('id') id :string, @Request() req) {
+        return this.imagesService.delete(req.user.id, id);
     }
 }
