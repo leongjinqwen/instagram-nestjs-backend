@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-// import { Exclude } from 'class-transformer';
 
 @Schema()
 export class User extends Document {
@@ -20,6 +19,9 @@ export class User extends Document {
   
   @Prop({ required: true })
   password: String;
+
+  @Prop()
+  profileImage: String;
 
 }
 

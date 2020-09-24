@@ -4,10 +4,15 @@ import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { CreateUserDto } from './dto/create-user.dto'
 import * as bcrypt from 'bcrypt';
+import { ImagesService } from '../images/images.service'
 
 @Injectable()
 export class UsersService {
-    constructor(@InjectModel('User') private readonly userModel:Model<User>) {}
+    constructor(
+        @InjectModel('User') 
+        private readonly userModel:Model<User>,
+        private readonly imagesService: ImagesService
+    ) {}
 
     async findAll(): Promise<User[]> {
         return await this.userModel.find()
@@ -34,6 +39,9 @@ export class UsersService {
         }
         const hashed = await bcrypt.hash(createUserDto.password, 10);
         createUserDto.password = hashed
+        if (!createUserDto.profileImage){
+            createUserDto.profileImage = "https://nextagram-backend.s3-ap-southeast-1.amazonaws.com/2020-01-24_001222.992069default_profile.png"
+        }
         const newUser = new this.userModel(createUserDto);
         return await newUser.save();
     }
@@ -42,5 +50,10 @@ export class UsersService {
     }
     async update(id: string, updateUserDto: CreateUserDto) : Promise<User> {
         return await this.userModel.findByIdAndUpdate(id, updateUserDto);
+    }
+    async addAvatar(userId: string, file: any) {
+        const avatarLink = await this.imagesService.fileupload(file);
+        const result = await this.userModel.updateOne({_id: userId}, {profileImage: avatarLink})
+        return await this.userModel.findOne({ _id: userId });
     }
 }

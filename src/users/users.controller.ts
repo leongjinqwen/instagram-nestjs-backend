@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Request, HttpException, UseGuards, HttpStatus, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './interfaces/user.interface'
 import { CreateUserDto } from './dto/create-user.dto'
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors/file.interceptor';
 
 
 @Controller('users')
@@ -15,6 +17,7 @@ export class UsersController {
             id: user._id,
             username: user.username,
             email: user.email,
+            profileImage: user.profileImage,
         }))
     };
     
@@ -25,6 +28,7 @@ export class UsersController {
             id: user._id,
             username: user.username,
             email: user.email,
+            profileImage: user.profileImage,
         }
     };
     @Post()
@@ -37,9 +41,17 @@ export class UsersController {
             id: user._id,
             username: user.username,
             email: user.email,
+            profileImage: user.profileImage,
         }
     };
 
+    @Post('upload') // upload one file
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(FileInterceptor('file'))
+    async addAvatar(@UploadedFile() file, @Request() req) {
+        return this.usersService.addAvatar(req.user.id, file);
+    }
+    
     @Delete(':id')
     delete(@Param('id') id :string): Promise<User> {
         return this.usersService.delete(id)

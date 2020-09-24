@@ -79,3 +79,15 @@ console.log(isPasswordMatching); // true
 
 **Handle Environment Variable with nestjs-config**  
 (https://github.com/nestjsx/nestjs-config)
+```
+npm install nestjs-config
+npm install @types/dotenv dotenv
+```
+
+
+**Upload file to AWS S3 Bucket**  
+```
+npm install aws-sdk @types/aws-sdk # connect to aws
+npm install uuid @types/uuid # create unique filename
+```
+
