@@ -6,8 +6,8 @@ import { AppService } from './app.service';
 import { ItemModule } from './items/items.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { ImagesService } from './images/images.service';
 import { ImagesModule } from './images/images.module';
+import { LikesModule } from './likes/likes.module';
 import * as path from 'path';
 
 // register blueprint/controller
@@ -21,7 +21,7 @@ import * as path from 'path';
       }),
       inject: [ConfigService],
     }),
-    AuthModule, UsersModule, ItemModule, ImagesModule
+    AuthModule, UsersModule, ItemModule, ImagesModule, LikesModule
   ],
   controllers: [AppController],
   providers: [AppService],

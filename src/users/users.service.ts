@@ -17,12 +17,17 @@ export class UsersService {
     async findAll(): Promise<User[]> {
         return await this.userModel.find()
     }
-    async getById(id: string): Promise<User | undefined> {
+    async getById(id: string) {
         const user = await this.userModel.findOne({ _id: id });
         if (!user) {
             throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
         }
-        return user
+        console.log(user)
+        return {
+            id: user._id,
+            profileImage: user.profileImage,
+            email: user.email,
+        }
     }
     async findOne(username: string): Promise<User | undefined> {
         return await this.userModel.findOne({ username: username });
