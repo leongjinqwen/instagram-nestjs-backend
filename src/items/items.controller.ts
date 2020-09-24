@@ -4,7 +4,7 @@ import { ItemsService } from './items.service';
 import { Item } from './interfaces/item.interface'
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-@Controller('items') // declare route
+@Controller('api/v1/items') // declare route
 export class ItemsController {
     constructor(
         private readonly itemsService: ItemsService

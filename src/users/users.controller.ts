@@ -6,7 +6,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors/file.interceptor';
 
 
-@Controller('users')
+@Controller('api/v1/users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
@@ -38,10 +38,13 @@ export class UsersController {
             throw new HttpException('Username or Email already existed.', HttpStatus.BAD_REQUEST);
         }
         return {
-            id: user._id,
-            username: user.username,
-            email: user.email,
-            profileImage: user.profileImage,
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                profileImage: user.profileImage,
+            },
+            message: 'Sign up successfully. You now can sign in to continue.'
         }
     };
 

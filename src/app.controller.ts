@@ -4,7 +4,7 @@ import { LocalAuthGuard } from './auth/local-auth.guard';
 import { AuthService } from './auth/auth.service';
 
 // blueprint
-@Controller()
+@Controller('api/v1')
 export class AppController {
   constructor(private authService: AuthService) {}
 
