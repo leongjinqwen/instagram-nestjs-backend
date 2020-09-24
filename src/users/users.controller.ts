@@ -24,6 +24,9 @@ export class UsersController {
     @Get(':username')
     async findOne(@Param('username') username :string): Promise<any> {
         const user = await this.usersService.findOne(username)
+        if (!user) {
+            throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+        }
         return {
             id: user._id,
             username: user.username,
@@ -64,4 +67,12 @@ export class UsersController {
     update(@Body() updateUserDto :CreateUserDto, @Param('id') id :string): Promise<User> {
         return this.usersService.update(id, updateUserDto)
     };
+
+    @Get('checkname/:name')
+    async checkValid(@Param('name') name :string): Promise<any> {
+        const user = await this.usersService.findOne(name)
+        return {
+            valid: user ? false : true
+        }
+    }; 
 }

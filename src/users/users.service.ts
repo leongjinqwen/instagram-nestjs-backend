@@ -25,11 +25,7 @@ export class UsersService {
         return user
     }
     async findOne(username: string): Promise<User | undefined> {
-        const user = await this.userModel.findOne({ username: username });
-        if (!user) {
-            throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
-        }
-        return user
+        return await this.userModel.findOne({ username: username });
     }
     async create(createUserDto: CreateUserDto) : Promise<User> {
         const duplicate_username = await this.userModel.findOne({ username: createUserDto.username });
