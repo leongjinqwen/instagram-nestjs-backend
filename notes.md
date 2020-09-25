@@ -99,13 +99,9 @@ npm install uuid @types/uuid # create unique filename
     ```
 
 1. Modify the package.json File  
-    Heroku using `start:prod` to start the application on Heroku, make sure it points to the `dist/src/main.js`
+    Need to run the `prebuild` to build our dist folder. Add `postinstall` script to automatically run after Heroku has finished installed the dependencies.
     ```json
-    "start:prod": "node dist/src/main.js",
-    ```
-    Need to run the `prestart:prod` to build our dist folder. Add `postinstall` script to automatically run after Heroku has finished installed the dependencies.
-    ```json
-    "postinstall": "npm run prestart:prod",
+    "postinstall": "npm run prebuild",
     ```
 
 1. Set environment variable with heroku config  
