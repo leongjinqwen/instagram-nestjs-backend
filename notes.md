@@ -109,7 +109,6 @@ npm install uuid @types/uuid # create unique filename
     ```
     NPM_CONFIG_PRODUCTION=false
     NODE_ENV=production
-    PORT=5000
     MONGO_URI=""
     SECRET_KEY=""
     AWS_S3_BUCKET_NAME=""
@@ -122,3 +121,12 @@ npm install uuid @types/uuid # create unique filename
     ```
     web: npm run start:prod
     ```
+
+1. Add heroku remote then push to heroku master  
+    ```
+    heroku git:remote -a <app-name>
+    git push heroku master
+    ```
+
+1. Failed to connect to MongoDB Atlas even after build succeeded  
+    You only be able to connect to your cluster from the IP Addresses that you listed in MongoDB Atlas account `Network Access`. Add `0.0.0.0/0` (i.e. all addresses) to your MongoDB Atlas whitelist, so heroku can connect to your cluster. 
