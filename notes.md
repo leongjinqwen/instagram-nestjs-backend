@@ -91,3 +91,38 @@ npm install aws-sdk @types/aws-sdk # connect to aws
 npm install uuid @types/uuid # create unique filename
 ```
 
+**Deployment**  
+(https://www.joshmorony.com/deploying-a-production-nestjs-server-on-heroku/)
+1. Modify src/main.ts to use a dynamic port
+    ```js
+    await app.listen(process.env.PORT || 3000);
+    ```
+
+1. Modify the package.json File  
+    Heroku using `start:prod` to start the application on Heroku, make sure it points to the `dist/src/main.js`
+    ```json
+    "start:prod": "node dist/src/main.js",
+    ```
+    Need to run the `prestart:prod` to build our dist folder. Add `postinstall` script to automatically run after Heroku has finished installed the dependencies.
+    ```json
+    "postinstall": "npm run prestart:prod",
+    ```
+
+1. Set environment variable with heroku config  
+    We need all of the devDependencies in `package.json` for it to run properly, so change `NPM_CONFIG_PRODUCTION` to `false`
+    ```
+    NPM_CONFIG_PRODUCTION=false
+    NODE_ENV=production
+    PORT=5000
+    MONGO_URI=""
+    SECRET_KEY=""
+    AWS_S3_BUCKET_NAME=""
+    AWS_ACCESS_KEY_ID=""
+    AWS_SECRET_ACCESS_KEY=""
+    ```
+
+1. Create `Procfile` at the root of project  
+    It allows us to specifically supply the command we want to run to start the application rather than the default `start` script.
+    ```
+    web: npm run start:prod
+    ```

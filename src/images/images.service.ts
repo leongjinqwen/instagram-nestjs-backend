@@ -6,12 +6,15 @@ import { InjectModel } from '@nestjs/mongoose'
 import { CreateImageDto } from './dto/create-image.dto'
 import { Image } from './interfaces/image.interface'
 import { Model } from 'mongoose'
+import { Like } from '../likes/interfaces/like.interface';
 
 @Injectable()
 export class ImagesService {
   constructor(
     @InjectModel('Image') 
     private readonly imageModel:Model<Image>,
+    @InjectModel('Like') 
+    private readonly likeModel:Model<Like>,
     private readonly configService: ConfigService
   ) {}
   // helper function to upload file
@@ -50,9 +53,10 @@ export class ImagesService {
   async findAll(userId: string): Promise<Image[]> {
     return await this.imageModel.find({userId: userId})
   }
-  // delete file with image id
+  // delete file with image id (delete all like also)
   async delete(userId: string, id: string) : Promise<Image> {
     const image = await this.imageModel.findOne({ _id: id });
+    const likes = await this.likeModel.deleteMany({ imageId: id });
     if (!image){
       throw new HttpException('Image not found', HttpStatus.BAD_REQUEST);
     }

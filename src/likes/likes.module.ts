@@ -12,6 +12,7 @@ import { UserSchema } from 'src/users/schemas/user.schema';
         MongooseModule.forFeature([{ name: "Like", schema:LikeSchema }]), 
         UsersModule
     ],
+    exports: [MongooseModule.forFeature([{ name: "Like", schema:LikeSchema }])],
     providers: [LikesService],
     controllers: [LikesController], 
 })
